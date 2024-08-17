@@ -1,3 +1,7 @@
-[gd_scene format=3 uid="uid://bxx3xpim0frqv"]
+[gd_scene load_steps=2 format=3 uid="uid://bxx3xpim0frqv"]
 
-[node name="Cart" type="Node3D"]
+[ext_resource type="PackedScene" uid="uid://djhjba0yxkdsa" path="res://Game/Cart/CartMesh.tscn" id="1_a2sok"]
+
+[node name="Cart" type="CharacterBody3D"]
+
+[node name="CartMesh" parent="." instance=ExtResource("1_a2sok")]
