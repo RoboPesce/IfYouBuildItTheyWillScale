@@ -2,6 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://djhjba0yxkdsa" path="res://Game/Cart/CartMesh.tscn" id="1_a2sok"]
 
-[node name="Cart" type="CharacterBody3D"]
+[node name="Cart" type="Node3D"]
 
 [node name="CartMesh" parent="." instance=ExtResource("1_a2sok")]
