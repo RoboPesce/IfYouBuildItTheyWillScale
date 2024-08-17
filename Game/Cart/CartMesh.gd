@@ -2,7 +2,7 @@ extends Node3D
 
 var Wheels : Array[MeshInstance3D]
 
-var wheel_velocity : float = 5
+var wheel_velocity : float = 0
 
 func _ready() -> void:
 	Wheels = [ $Wheel1, $Wheel2, $Wheel3, $Wheel4 ]
