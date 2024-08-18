@@ -4,8 +4,8 @@ var rotational_velocity : float = 0
 @export var max_rotational_velocity : float
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	rotational_velocity *= 0.97
+func _physics_process(delta: float) -> void:
+	rotational_velocity *= 0.93
 
 	rotate_y(rotational_velocity * delta)
 

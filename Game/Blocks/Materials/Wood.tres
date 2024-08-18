@@ -1,8 +1,8 @@
 [gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://wr3lii6dhs5"]
 
-[ext_resource type="Texture2D" uid="uid://bu2wik584cchp" path="res://Res/Import/Wood1.png" id="1_5tqom"]
+[ext_resource type="Texture2D" uid="uid://bu2wik584cchp" path="res://Res/Wood1.png" id="1_6mt5k"]
 
 [resource]
-albedo_texture = ExtResource("1_5tqom")
+albedo_texture = ExtResource("1_6mt5k")
 uv1_scale = Vector3(3, 2, 1)
 texture_filter = 0
