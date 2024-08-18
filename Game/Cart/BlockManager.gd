@@ -3,19 +3,22 @@ extends Node3D
 
 # 3D array of all blocks in scene
 # BlockArray[level][row][column]
-var BlockArray
+var BlockArray : Array
 
 # Block fall timer
 var BlockFallTimer : float = 0
 var FallTime : float = 1.0
+var update : int = 1
 
 func _ready() -> void:
 	# initialize block array
-	BlockArray = Array[Global.MAX_BLOCK_HEIGHT].fill(
-		Array[5].fill(
-			Array[5].fill(null)
-		)
-	)
+	BlockArray.resize(Global.MAX_BLOCK_HEIGHT)
+	var TempArray : Array = Array()
+	TempArray.resize(Global.BLOCKS_PER_SIDE)
+	var TempArrayNested : Array = Array()
+	TempArrayNested.resize(Global.BLOCKS_PER_SIDE)
+	TempArray.fill(TempArrayNested)
+	BlockArray.fill(TempArray)
 
 func _process(delta: float) -> void:
 	BlockFallTimer += delta

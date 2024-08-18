@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bxx3xpim0frqv"]
+[gd_scene load_steps=5 format=3 uid="uid://bxx3xpim0frqv"]
 
 [ext_resource type="PackedScene" uid="uid://djhjba0yxkdsa" path="res://Game/Cart/CartMesh.tscn" id="1_a2sok"]
 [ext_resource type="Script" path="res://Game/Cart/Cart.gd" id="1_oat7h"]
 [ext_resource type="Script" path="res://Game/Cart/BlockManager.gd" id="3_d8qc8"]
+[ext_resource type="Script" path="res://Game/World/CameraRoot.gd" id="4_od3py"]
 
 [node name="Cart" type="Node3D"]
 script = ExtResource("1_oat7h")
@@ -16,3 +17,10 @@ script = ExtResource("3_d8qc8")
 [node name="TestBlocks" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.634, -2.01069)
 visible = false
+
+[node name="CameraRoot" type="Node3D" parent="."]
+script = ExtResource("4_od3py")
+max_rotational_velocity = 5.0
+
+[node name="Camera" type="Camera3D" parent="CameraRoot"]
+transform = Transform3D(-3.76273e-08, -0.508921, 0.860813, -2.22457e-08, 0.860813, 0.508921, -1, 0, -4.37114e-08, 6.5682, 5.54648, 0)
