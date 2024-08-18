@@ -4,3 +4,4 @@
 - Pathfinding
 - Collisions with cannonballs
 - soft slams and slams
+- travel is the timer
