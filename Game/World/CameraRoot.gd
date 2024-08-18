@@ -10,5 +10,5 @@ func _physics_process(delta : float) -> void:
 	rotate_y(rotational_velocity * delta)
 
 func _input(event : InputEvent) -> void:
-	if (event.is_action_pressed("RotateCameraLeft")): rotational_velocity = max_rotational_velocity
-	elif (event.is_action_pressed("RotateCameraRight")): rotational_velocity = -max_rotational_velocity
+	if (event.is_action_pressed("RotateCameraLeft")): rotational_velocity = -max_rotational_velocity
+	elif (event.is_action_pressed("RotateCameraRight")): rotational_velocity = max_rotational_velocity

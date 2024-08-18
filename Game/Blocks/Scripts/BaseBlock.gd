@@ -14,5 +14,8 @@ var parent_piece : Piece
 var component_root : BaseBlock
 var last_update : int = 0
 
+# used by root
+var component_blocks : Array[BaseBlock] = Array()
+
 func _process(delta : float) -> void:
 	pass

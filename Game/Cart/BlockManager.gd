@@ -34,23 +34,26 @@ func handle_block_fall() -> void:
 	# handle piece moving downward
 	if (current_piece):
 		handle_piece_fall()
+	else: # create new piece
+		pass
 
 	var component_roots : Array[BaseBlock]
 	# iterate through blocks/levels bottom up, skipping the first row
 	for level in range(1, Global.MAX_BLOCK_HEIGHT):
-		var empty_level = true
 		for row in range(Global.BLOCKS_PER_SIDE):
 			for col in range(Global.BLOCKS_PER_SIDE):
 				var block : BaseBlock = block_array[level][row][col]
 				if block == null: continue
-				# pieces will be handled separately
+				# piece already handled separately
 				if (block.piece): continue
-				
-				empty_level = false
 				if (block.last_update == current_update): continue
 				
 				component_roots.append(block)
 				propagate_component_and_update(block, block)
+	
+	# find how far each component needs to drop
+	for component in component_roots:
+		pass
 
 func handle_piece_fall() -> void:
 	var can_drop : bool = true
@@ -63,9 +66,11 @@ func handle_piece_fall() -> void:
 			can_drop = false
 			break
 	
-	if (can_drop):
+	if (can_drop): # lower blocks by 1
 		for block : BaseBlock in current_piece.blocks:
+			block_array[block.level][block.row][block.col] = null
 			block.level -= 1
+		for block : BaseBlock in current_piece.blocks: block_array[block.level][block.row][block.col] = block
 	else: # dissolve piece grouping, blocks become part of tower
 		for block : BaseBlock in current_piece.blocks:
 			block.parent_piece = null
@@ -76,19 +81,22 @@ func propagate_component_and_update(block : BaseBlock, root : BaseBlock) -> void
 	# propagate in 6 directions
 	if (block == null
 		or block.piece
-		or block.last_update == current_update
-		# ladders form their own components
-		or (block.type == BaseBlock.BlockType.LADDER) != (root.type == BaseBlock.BlockType.LADDER)): 
+		or block.last_update == current_update): 
 			return
 	block.component_root = root
 	block.last_update = current_update
 	
-	if block.col > 0: propagate_component_and_update(block_array[block.level][block.row][block.col-1], root)
-	if block.col < Global.BLOCKS_PER_SIDE - 1: propagate_component_and_update(block_array[block.level][block.row][block.col+1], root)
-	if block.row > 0: propagate_component_and_update(block_array[block.level][block.row-1][block.col], root)
-	if block.row < Global.BLOCKS_PER_SIDE - 1: propagate_component_and_update(block_array[block.level][block.row+1][block.col], root)
+	var not_both_ladder: bool = (block.type == BaseBlock.BlockType.LADDER) != (root.type == BaseBlock.BlockType.LADDER)
+	
+	# ladders form their own components unless on the ground, so skip these if looking to the side
+	# ladders can look down for non-ladder components and non-ladders can look up
 	if block.level > 1: propagate_component_and_update(block_array[block.level-1][block.row][block.col], root)
 	if block.level < Global.MAX_BLOCK_HEIGHT: propagate_component_and_update(block_array[block.level+1][block.row][block.col], root)
+	if not_both_ladder: return
+	if block.row > 0: propagate_component_and_update(block_array[block.level][block.row-1][block.col], root)
+	if block.row < Global.BLOCKS_PER_SIDE - 1: propagate_component_and_update(block_array[block.level][block.row+1][block.col], root)
+	if block.col > 0: propagate_component_and_update(block_array[block.level][block.row][block.col-1], root)
+	if block.col < Global.BLOCKS_PER_SIDE - 1: propagate_component_and_update(block_array[block.level][block.row][block.col+1], root)
 
 # returns null if no block found, or if the block is part of this block's component
 func get_first_block_below(block : BaseBlock) -> BaseBlock:

@@ -7,7 +7,6 @@
 resource_name = "Material"
 cull_mode = 2
 albedo_texture = ExtResource("2_jg48p")
-roughness = 0.5
 texture_filter = 2
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_rxfeu"]

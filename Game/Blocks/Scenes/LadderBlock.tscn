@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://x2qriqwana8l"]
+
+[ext_resource type="PackedScene" uid="uid://s2lspcc1g1t8" path="res://Game/Blocks/Scenes/BaseBlock.tscn" id="1_w07ll"]
+[ext_resource type="ArrayMesh" uid="uid://c8ve8wkxsavba" path="res://Game/Blocks/Materials/LadderMesh.res" id="2_us0u4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7spo7"]
+
+[node name="LadderBlock" instance=ExtResource("1_w07ll")]
+type = 2
+
+[node name="BlockMesh" parent="." index="0"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+mesh = ExtResource("2_us0u4")
+
+[node name="Collider" parent="." index="1"]
+shape = SubResource("BoxShape3D_7spo7")

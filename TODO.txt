@@ -2,5 +2,5 @@
 - Connected components
 - Clear Layers
 - Pathfinding
-- Collisions
+- Collisions with cannonballs
 - soft slams and slams
