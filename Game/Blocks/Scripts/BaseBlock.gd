@@ -1,7 +1,11 @@
 class_name BaseBlock
 extends CharacterBody3D
 
-var level : int
+enum BlockType { WOOD, STONE, LADDER }
+
+@export var type : BlockType
+
+var level : int = -1
 var row : int
 var col : int
 var parent_piece : Piece

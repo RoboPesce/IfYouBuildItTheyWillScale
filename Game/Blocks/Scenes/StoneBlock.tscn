@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3 uid="uid://bxkdjn26635lm"]
+
+[ext_resource type="PackedScene" uid="uid://s2lspcc1g1t8" path="res://Game/Blocks/Scenes/BaseBlock.tscn" id="1_rhc55"]
+[ext_resource type="Material" uid="uid://ddnytncw8moaj" path="res://Game/Blocks/Materials/Stone.tres" id="2_os4j4"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_a76hg"]
+material = ExtResource("2_os4j4")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lblji"]
+
+[node name="StoneBlock" instance=ExtResource("1_rhc55")]
+type = 1
+
+[node name="BlockMesh" parent="." index="0"]
+mesh = SubResource("BoxMesh_a76hg")
+
+[node name="Collider" parent="." index="1"]
+shape = SubResource("BoxShape3D_lblji")

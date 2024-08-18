@@ -3,6 +3,8 @@ extends Node
 const MAX_BLOCK_HEIGHT : int = 30
 const BLOCKS_PER_SIDE : int = 5
 
+const 
+
 # can be used for doubles or vectors
 func FrameIndependentLerp(a, b, damping_factor : float, delta : float):
 	var factor = exp(log(damping_factor) * delta)
