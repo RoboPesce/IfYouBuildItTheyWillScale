@@ -1,17 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://crl06mr425u2y"]
+[gd_scene load_steps=5 format=3 uid="uid://4p45xkryuevn"]
 
-[ext_resource type="Material" uid="uid://wr3lii6dhs5" path="res://Game/Blocks/Materials/Wood.tres" id="1_hou15"]
+[ext_resource type="PackedScene" uid="uid://s2lspcc1g1t8" path="res://Game/Blocks/Scenes/BaseBlock.tscn" id="1_q65gs"]
+[ext_resource type="Material" uid="uid://wr3lii6dhs5" path="res://Game/Blocks/Materials/Wood.tres" id="2_mjq1f"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_p0mow"]
-lightmap_size_hint = Vector2i(14, 21)
-material = ExtResource("1_hou15")
+[sub_resource type="BoxMesh" id="BoxMesh_7i3q2"]
+material = ExtResource("2_mjq1f")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_hjb85"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_7kcpm"]
 
-[node name="WoodBlock" type="CharacterBody3D"]
+[node name="WoodBlock" instance=ExtResource("1_q65gs")]
 
-[node name="Mesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_p0mow")
+[node name="BlockMesh" parent="." index="0"]
+mesh = SubResource("BoxMesh_7i3q2")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_hjb85")
+[node name="Collider" parent="." index="1"]
+shape = SubResource("BoxShape3D_7kcpm")

@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://bxx3xpim0frqv"]
+[gd_scene load_steps=4 format=3 uid="uid://bxx3xpim0frqv"]
 
 [ext_resource type="PackedScene" uid="uid://djhjba0yxkdsa" path="res://Game/Cart/CartMesh.tscn" id="1_a2sok"]
 [ext_resource type="Script" path="res://Game/Cart/Cart.gd" id="1_oat7h"]
-[ext_resource type="PackedScene" uid="uid://c4s42nkmbqkd3" path="res://Game/Blocks/Scenes/StoneBlock.tscn" id="3_aqq61"]
 [ext_resource type="Script" path="res://Game/Cart/BlockManager.gd" id="3_d8qc8"]
 
 [node name="Cart" type="Node3D"]
@@ -17,17 +16,3 @@ script = ExtResource("3_d8qc8")
 [node name="TestBlocks" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.634, -2.01069)
 visible = false
-
-[node name="WoodBlock" parent="TestBlocks" instance=ExtResource("3_aqq61")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.01069)
-
-[node name="WoodBlock2" parent="TestBlocks" instance=ExtResource("3_aqq61")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.01069)
-
-[node name="WoodBlock3" parent="TestBlocks" instance=ExtResource("3_aqq61")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.01069)
-
-[node name="WoodBlock4" parent="TestBlocks" instance=ExtResource("3_aqq61")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.01069)
-
-[node name="WoodBlock5" parent="TestBlocks" instance=ExtResource("3_aqq61")]

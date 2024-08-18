@@ -15,6 +15,14 @@ run/main_scene="res://Game/World/World.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Global="*res://Game/World/Global.gd"
+
+[editor_plugins]
+
+enabled=PackedStringArray()
+
 [importer_defaults]
 
 texture={

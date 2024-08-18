@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://s2lspcc1g1t8"]
+
+[ext_resource type="Script" path="res://Game/Blocks/Scripts/BaseBlock.gd" id="1_oyhub"]
+
+[node name="BaseBlock" type="CharacterBody3D"]
+script = ExtResource("1_oyhub")
+
+[node name="BlockMesh" type="MeshInstance3D" parent="."]
+
+[node name="Collider" type="CollisionShape3D" parent="."]

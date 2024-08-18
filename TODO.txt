@@ -1,0 +1,4 @@
+- Pieces
+- Connected components
+- Clear Layers
+- Pathfinding
