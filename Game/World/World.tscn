@@ -5,3 +5,7 @@
 [node name="World" type="Node3D"]
 
 [node name="Cart" parent="." instance=ExtResource("1_hwa3o")]
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.674935, 0.0955091, -0.73167, -0.193348, 0.934049, 0.300282, 0.712095, 0.344138, -0.611956, 0, 0, 0)
+sky_mode = 1

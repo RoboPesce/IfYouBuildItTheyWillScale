@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://Game/Blocks/Scripts/BaseBlock.gd" id="1_oyhub"]
 
 [node name="BaseBlock" type="CharacterBody3D"]
+collision_mask = 2
 script = ExtResource("1_oyhub")
 
 [node name="BlockMesh" type="MeshInstance3D" parent="."]
