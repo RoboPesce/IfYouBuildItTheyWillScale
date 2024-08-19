@@ -13,8 +13,10 @@ var current_piece : Piece = null
 var component_roots : Array[BaseBlock]
 
 # Block fall timer
-var block_fall_timer : float = 0
-var fall_time : float = 1.0
+@export var base_update_time : float = 1.0
+@export var soft_slam_update_time : float = 0.15
+var block_update_timer : float = 0
+var update_time : float = base_update_time
 var current_update : int = 0
 
 func _ready() -> void:
@@ -48,11 +50,12 @@ func _ready() -> void:
 	current_piece.blocks.append(construct_block(6, 1, 2, BaseBlock.BlockType.WOOD, "wood02"))
 	for block in current_piece.blocks:
 		block.parent_piece = current_piece
+	current_piece.pivot = current_piece.blocks[1]
 
 func _process(delta : float) -> void:
-	block_fall_timer += delta
-	if (block_fall_timer >= fall_time):
-		block_fall_timer = 0
+	block_update_timer += delta
+	if (block_update_timer >= update_time):
+		block_update_timer = 0
 		current_update += 1
 		update_blocks()
 
@@ -62,13 +65,25 @@ func _input(event : InputEvent) -> void:
 		if (current_piece):
 			current_piece.dissolve_piece()
 			current_piece = null
-			block_fall_timer = fall_time
+			block_update_timer = update_time
 	elif (event.is_action_pressed("SoftSlamBlock")):
 		print("SoftSlamBlock")
-		fall_time = 0.1
+		update_time = soft_slam_update_time
 	elif (event.is_action_released("SoftSlamBlock")):
 		print("SoftSlamBlock released")
-		fall_time = 1.0
+		update_time = base_update_time
+	elif (event.is_action_pressed("MoveForward")):
+		if (translate_piece(0, -1, 0)): print("Successfully moved forward")
+		else: print("Failed to move forward")
+	elif (event.is_action_pressed("MoveBackward")):
+		if (translate_piece(0, 1, 0)): print("Successfully moved backward")
+		else: print("Failed to move backward")
+	elif (event.is_action_pressed("MoveLeft")):
+		if (translate_piece(0, 0, 1)): print("Successfully moved left")
+		else: print("Failed to move left")
+	elif (event.is_action_pressed("MoveRight")):
+		if (translate_piece(0, 0, -1)): print("Successfully moved right")
+		else: print("Failed to move right")
 
 # 1. Move the current piece downward. If not possible, relinquish control
 #    over its blocks and delete it.
@@ -127,19 +142,19 @@ func update_blocks() -> void:
 	#print()
 
 func handle_piece_fall() -> void:
-	var can_drop : bool = true
+	var b_can_drop : bool = true
 	for block : BaseBlock in current_piece.blocks:
 		if (block.level == 0):
-			can_drop = false
+			b_can_drop = false
 			break
 		var next_block = get_first_block_below(block)
 		if (next_block
 		  and (not next_block.parent_piece == block.parent_piece)
 		  and (next_block.level == block.level - 1)):
-			can_drop = false
+			b_can_drop = false
 			break
 	
-	if (can_drop): # lower blocks by 1
+	if (b_can_drop): # lower blocks by 1
 		for block : BaseBlock in current_piece.blocks:
 			reposition_block(block, block.level - 1, block.row, block.col)
 		print("dropping piece")
@@ -163,7 +178,7 @@ func propagate_component_and_update(block : BaseBlock, root : BaseBlock) -> void
 	if block.level > 1:
 		next_block = block_array[block.level-1][block.row][block.col]
 		if next_block and (block.is_ladder() or !next_block.is_ladder()): propagate_component_and_update(next_block, root)
-	if block.level < Global.MAX_BLOCK_HEIGHT:
+	if block.level < Global.MAX_BLOCK_HEIGHT - 1:
 		next_block = block_array[block.level+1][block.row][block.col]
 		if next_block and (!block.is_ladder() or next_block.is_ladder()): propagate_component_and_update(next_block, root)
 	if (block.is_ladder()): return
@@ -209,3 +224,22 @@ func reposition_block(block : BaseBlock, level : int, row : int, col : int):
 	block.row = row
 	block.col = col
 	block_array[block.level][block.row][block.col] = block
+
+# repositions and teleports all blocks in the current piece if possible
+# returns false if translation fails
+func translate_piece(d_level : int, d_row : int, d_col : int) -> bool:
+	if (!current_piece): return false
+	# verify the translation is valid
+	for block in current_piece.blocks:
+		var n_level : int = block.level + d_level
+		var n_row : int = block.row + d_row
+		var n_col : int = block.col + d_col
+		if (n_level < 0 or n_level >= Global.MAX_BLOCK_HEIGHT
+		  or n_row < 0 or n_row >= Global.BLOCKS_PER_SIDE
+		  or n_col < 0 or n_col >= Global.BLOCKS_PER_SIDE
+		  or (block_array[n_level][n_row][n_col] and block_array[n_level][n_row][n_col].parent_piece != block.parent_piece)):
+			return false
+	for block in current_piece.blocks:
+		reposition_block(block, block.level + d_level, block.row + d_row, block.col + d_col)
+		block.position += Vector3(d_row, d_level, d_col)
+	return true

@@ -14,7 +14,6 @@ var parent_piece : Piece
 
 # Physics
 static var gravity : float = 1
-#static var dropping : bool = false
 
 # first block found in this connected component
 var component_root : BaseBlock
@@ -25,7 +24,6 @@ var component_blocks : Array[BaseBlock]
 var drop_distance : int
 
 func _physics_process(delta : float) -> void:
-	#if (not dropping): return
 	if (!component_root and !parent_piece): return
 	
 	# assumption: blocks only fall downward
