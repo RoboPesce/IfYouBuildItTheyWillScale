@@ -14,7 +14,7 @@ var component_roots : Array[BaseBlock]
 
 # Block fall timer
 var BlockFallTimer : float = 0
-var FallTime : float = 1.0
+var FallTime : float = 3.0
 var current_update : int = 0
 
 func _ready() -> void:
@@ -82,12 +82,24 @@ func update_blocks() -> void:
 				root.drop_distance = 0
 				break
 			var below_block : BaseBlock = get_first_block_below(block)
-			var dist : int = (block.level - below_block.level) if below_block else block.level
+			var dist : int = (block.level - below_block.level - 1) if below_block else block.level
 			if (dist < root.drop_distance): root.drop_distance = dist
 	
-	# TESTING
+	# set new positions
 	for root in component_roots:
-		print(root.name)
+		for block in root.component_blocks:
+			block.level -= root.drop_distance
+	
+	# TESTING
+	print("Update: ", current_update)
+	for root in component_roots:
+		print("Root: ", root.name)
+		print("Drop distance: ", root.drop_distance)
+		var blocks : String = ""
+		for block in root.component_blocks:
+			blocks += ' ' + block.name
+		print("Blocks:", blocks)
+	print()
 
 func handle_piece_fall() -> void:
 	var can_drop : bool = true
@@ -151,14 +163,14 @@ func get_first_block_below(block : BaseBlock) -> BaseBlock:
 		if (found_block): return found_block if found_block.component_root != block.component_root else null
 	return null
 
-func construct_block(level : int, row : int, col : int, type : BaseBlock.BlockType, name : String = "") -> BaseBlock:
+func construct_block(level : int, row : int, col : int, type : BaseBlock.BlockType, _name : String = "") -> BaseBlock:
 	if block_array[level][row][col]: return null
 	var block = BlockContructors[type].instantiate()
 	block.level = level
 	block.row = row
 	block.col = col
 	block_array[level][row][col] = block
-	block.name = name
+	block.name = _name
 	# level is the y-coordinate
 	block.transform.origin = Vector3(row, level, col)
 	return block
