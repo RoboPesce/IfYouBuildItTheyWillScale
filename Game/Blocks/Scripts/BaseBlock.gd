@@ -13,7 +13,7 @@ var col : int
 var parent_piece : Piece
 
 # Physics
-static var gravity : float = 9.8
+static var gravity : float = 1
 #static var dropping : bool = false
 
 # first block found in this connected component
@@ -24,7 +24,7 @@ var last_update : int = 0
 var component_blocks : Array[BaseBlock]
 var drop_distance : int
 
-func _process(delta : float) -> void:
+func _physics_process(delta : float) -> void:
 	#if (not dropping): return
 	if (!component_root): return
 	
@@ -38,6 +38,7 @@ func _process(delta : float) -> void:
 	# check if we will arrive to our spot next frame, if so just teleport there
 	if (position.y - level > -velocity.y * delta):
 		velocity.y -= component_root.drop_distance * gravity * delta
+		move_and_collide(velocity)
 	else:
 		velocity = Vector3.ZERO
 		move_and_collide(Vector3(row, level, col) - position)

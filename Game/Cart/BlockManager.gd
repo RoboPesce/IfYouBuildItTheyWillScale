@@ -33,10 +33,14 @@ func _ready() -> void:
 	add_child(construct_block(1, 0, 0, BaseBlock.BlockType.WOOD, "wood1"))
 	add_child(construct_block(4, 0, 0, BaseBlock.BlockType.STONE, "stone4"))
 	add_child(construct_block(5, 0, 0, BaseBlock.BlockType.STONE, "stone5"))
+	add_child(construct_block(5, 1, 0, BaseBlock.BlockType.WOOD, "wood2"))
+	add_child(construct_block(5, 2, 1, BaseBlock.BlockType.WOOD, "wood3"))
 	add_child(construct_block(0, 1, 0, BaseBlock.BlockType.LADDER, "ladder0"))
 	add_child(construct_block(1, 1, 0, BaseBlock.BlockType.LADDER, "ladder1"))
+	add_child(construct_block(1, 2, 0, BaseBlock.BlockType.LADDER, "ladder3"))
 	add_child(construct_block(0, 4, 3, BaseBlock.BlockType.STONE, "stone2"))
 	add_child(construct_block(0, 4, 4, BaseBlock.BlockType.STONE, "stone3"))
+	add_child(construct_block(1, 4, 4, BaseBlock.BlockType.LADDER, "ladder4"))
 
 func _process(delta : float) -> void:
 	BlockFallTimer += delta
