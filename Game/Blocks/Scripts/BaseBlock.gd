@@ -1,7 +1,7 @@
 class_name BaseBlock
 extends CharacterBody3D
 
-enum BlockType { WOOD, STONE, LADDER }
+enum BlockType { WOOD=0, STONE=1, LADDER=2 }
 
 @export var type : BlockType
 
@@ -15,7 +15,7 @@ var component_root : BaseBlock
 var last_update : int = 0
 
 # used by root
-var component_blocks : Array[BaseBlock] = Array()
+var component_blocks : Array[BaseBlock]
 var drop_distance : int
 
 func _process(delta : float) -> void:
