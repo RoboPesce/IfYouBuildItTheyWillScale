@@ -16,6 +16,10 @@ var last_update : int = 0
 
 # used by root
 var component_blocks : Array[BaseBlock] = Array()
+var drop_distance : int
 
 func _process(delta : float) -> void:
 	pass
+
+func is_ladder() -> bool:
+	return type == BlockType.LADDER
