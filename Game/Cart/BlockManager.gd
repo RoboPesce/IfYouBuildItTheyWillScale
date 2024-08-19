@@ -29,18 +29,19 @@ func _ready() -> void:
 			block_array[level][row].fill(null)
 	
 	# TESTING
-	add_child(construct_block(0, 0, 0, BaseBlock.BlockType.STONE, "stone0"))
-	add_child(construct_block(1, 0, 0, BaseBlock.BlockType.WOOD, "wood1"))
-	add_child(construct_block(4, 0, 0, BaseBlock.BlockType.STONE, "stone4"))
-	add_child(construct_block(5, 0, 0, BaseBlock.BlockType.STONE, "stone5"))
-	add_child(construct_block(5, 1, 0, BaseBlock.BlockType.WOOD, "wood2"))
-	add_child(construct_block(5, 2, 1, BaseBlock.BlockType.WOOD, "wood3"))
-	add_child(construct_block(0, 1, 0, BaseBlock.BlockType.LADDER, "ladder0"))
-	add_child(construct_block(1, 1, 0, BaseBlock.BlockType.LADDER, "ladder1"))
-	add_child(construct_block(1, 2, 0, BaseBlock.BlockType.LADDER, "ladder3"))
-	add_child(construct_block(0, 4, 3, BaseBlock.BlockType.STONE, "stone2"))
-	add_child(construct_block(0, 4, 4, BaseBlock.BlockType.STONE, "stone3"))
-	add_child(construct_block(1, 4, 4, BaseBlock.BlockType.LADDER, "ladder4"))
+	construct_block(0, 0, 0, BaseBlock.BlockType.STONE, "stone0")
+	construct_block(1, 0, 0, BaseBlock.BlockType.WOOD, "wood1")
+	construct_block(4, 0, 0, BaseBlock.BlockType.STONE, "stone4")
+	construct_block(5, 0, 0, BaseBlock.BlockType.STONE, "stone5")
+	construct_block(5, 1, 0, BaseBlock.BlockType.WOOD, "wood2")
+	construct_block(5, 2, 1, BaseBlock.BlockType.WOOD, "wood3")
+	construct_block(0, 1, 0, BaseBlock.BlockType.LADDER, "ladder0")
+	construct_block(1, 1, 0, BaseBlock.BlockType.LADDER, "ladder1")
+	construct_block(1, 2, 0, BaseBlock.BlockType.LADDER, "ladder3")
+	construct_block(0, 4, 3, BaseBlock.BlockType.STONE, "stone2")
+	construct_block(0, 4, 4, BaseBlock.BlockType.STONE, "stone3")
+	construct_block(1, 4, 4, BaseBlock.BlockType.LADDER, "ladder4")
+	current_piece = Piece.new()
 
 func _process(delta : float) -> void:
 	BlockFallTimer += delta
@@ -92,9 +93,7 @@ func update_blocks() -> void:
 	# set new positions
 	for root in component_roots:
 		for block in root.component_blocks:
-			if (block_array[block.level][block.row][block.col] == block): block_array[block.level][block.row][block.col] = null
-			block.level -= root.drop_distance
-			block_array[block.level][block.row][block.col] = block
+			reposition_block(block, block.level - root.drop_distance, block.row, block.col)
 
 	# TESTING
 	print("Update: ", current_update)
@@ -120,9 +119,7 @@ func handle_piece_fall() -> void:
 	
 	if (can_drop): # lower blocks by 1
 		for block : BaseBlock in current_piece.blocks:
-			block_array[block.level][block.row][block.col] = null
-			block.level -= 1
-		for block : BaseBlock in current_piece.blocks: block_array[block.level][block.row][block.col] = block
+			reposition_block(block, block.level - 1, block.row, block.col)
 	else: # dissolve piece grouping, blocks become part of tower
 		for block : BaseBlock in current_piece.blocks:
 			block.parent_piece = null
@@ -170,7 +167,7 @@ func get_first_block_below(block : BaseBlock) -> BaseBlock:
 	return null
 
 func construct_block(level : int, row : int, col : int, type : BaseBlock.BlockType, _name : String = "") -> BaseBlock:
-	if block_array[level][row][col]: return null
+	# if block_array[level][row][col]: return null
 	var block = BlockContructors[type].instantiate()
 	block.level = level
 	block.row = row
@@ -179,6 +176,13 @@ func construct_block(level : int, row : int, col : int, type : BaseBlock.BlockTy
 	block.name = _name
 	# level is the y-coordinate
 	block.transform.origin = Vector3(row, level, col)
+	add_child(block)
 	return block
-	
-	
+
+func reposition_block(block : BaseBlock, level : int, row : int, col : int):
+	# if block_array[level][row][col]: return null
+	if (block_array[block.level][block.row][block.col] == block): block_array[block.level][block.row][block.col] = null
+	block.level = level
+	block.row = row
+	block.col = col
+	block_array[block.level][block.row][block.col] = block
