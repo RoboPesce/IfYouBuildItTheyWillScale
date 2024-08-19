@@ -26,18 +26,13 @@ var drop_distance : int
 
 func _physics_process(delta : float) -> void:
 	#if (not dropping): return
-	if (!component_root): return
-	
-	# TESTING
-	if (name == "stone4"):
-		print("Stone4:")
-		print("position.y - level: ", position.y - level)
-		print("-velocity.y * delta: ", -velocity.y * delta)
+	if (!component_root and !parent_piece): return
 	
 	# assumption: blocks only fall downward
 	# check if we will arrive to our spot next frame, if so just teleport there
 	if (position.y - level > -velocity.y * delta):
-		velocity.y -= component_root.drop_distance * gravity * delta
+		var dist : float = component_root.drop_distance if component_root else 1
+		velocity.y -= dist * gravity * delta
 		move_and_collide(velocity)
 	else:
 		velocity = Vector3.ZERO

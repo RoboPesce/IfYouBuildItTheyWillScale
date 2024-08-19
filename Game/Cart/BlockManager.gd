@@ -42,6 +42,13 @@ func _ready() -> void:
 	construct_block(0, 4, 4, BaseBlock.BlockType.STONE, "stone3")
 	construct_block(1, 4, 4, BaseBlock.BlockType.LADDER, "ladder4")
 	current_piece = Piece.new()
+	current_piece.blocks.append(construct_block(5, 2, 2, BaseBlock.BlockType.LADDER, "ladder01"))
+	current_piece.blocks.append(construct_block(6, 2, 2, BaseBlock.BlockType.LADDER, "ladder02"))
+	current_piece.blocks.append(construct_block(7, 2, 2, BaseBlock.BlockType.LADDER, "ladder03"))
+	current_piece.blocks.append(construct_block(6, 3, 2, BaseBlock.BlockType.WOOD, "wood01"))
+	current_piece.blocks.append(construct_block(6, 1, 2, BaseBlock.BlockType.WOOD, "wood02"))
+	for block in current_piece.blocks:
+		block.parent_piece = current_piece
 
 func _process(delta : float) -> void:
 	BlockFallTimer += delta
@@ -96,15 +103,15 @@ func update_blocks() -> void:
 			reposition_block(block, block.level - root.drop_distance, block.row, block.col)
 
 	# TESTING
-	print("Update: ", current_update)
-	for root in component_roots:
-		print(" Root: ", root.name)
-		print(" Drop distance: ", root.drop_distance)
-		var blocks : String = ""
-		for block in root.component_blocks:
-			blocks += ' ' + block.name
-		print(" Blocks:", blocks, '\n')
-	print()
+	#print("Update: ", current_update)
+	#for root in component_roots:
+		#print(" Root: ", root.name)
+		#print(" Drop distance: ", root.drop_distance)
+		#var blocks : String = ""
+		#for block in root.component_blocks:
+			#blocks += ' ' + block.name
+		#print(" Blocks:", blocks, '\n')
+	#print()
 
 func handle_piece_fall() -> void:
 	var can_drop : bool = true
@@ -113,17 +120,21 @@ func handle_piece_fall() -> void:
 			can_drop = false
 			break
 		var next_block = get_first_block_below(block)
-		if (next_block and (not next_block.parent_piece == block.parent_piece) and (next_block.level == block.level - 1)):
+		if (next_block
+		  and (not next_block.parent_piece == block.parent_piece)
+		  and (next_block.level == block.level - 1)):
 			can_drop = false
 			break
 	
 	if (can_drop): # lower blocks by 1
 		for block : BaseBlock in current_piece.blocks:
 			reposition_block(block, block.level - 1, block.row, block.col)
+		print("dropping piece")
 	else: # dissolve piece grouping, blocks become part of tower
 		for block : BaseBlock in current_piece.blocks:
 			block.parent_piece = null
 		current_piece = null
+		print("settled current piece")
 
 # find all blocks in the connected component of the root block and update references
 func propagate_component_and_update(block : BaseBlock, root : BaseBlock) -> void:
