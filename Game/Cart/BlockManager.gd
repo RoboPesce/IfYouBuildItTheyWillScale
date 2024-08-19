@@ -13,8 +13,8 @@ var current_piece : Piece = null
 var component_roots : Array[BaseBlock]
 
 # Block fall timer
-var BlockFallTimer : float = 0
-var FallTime : float = 2.0
+var block_fall_timer : float = 0
+var fall_time : float = 1.0
 var current_update : int = 0
 
 func _ready() -> void:
@@ -34,7 +34,6 @@ func _ready() -> void:
 	construct_block(4, 0, 0, BaseBlock.BlockType.STONE, "stone4")
 	construct_block(5, 0, 0, BaseBlock.BlockType.STONE, "stone5")
 	construct_block(5, 1, 0, BaseBlock.BlockType.WOOD, "wood2")
-	construct_block(5, 2, 1, BaseBlock.BlockType.WOOD, "wood3")
 	construct_block(0, 1, 0, BaseBlock.BlockType.LADDER, "ladder0")
 	construct_block(1, 1, 0, BaseBlock.BlockType.LADDER, "ladder1")
 	construct_block(1, 2, 0, BaseBlock.BlockType.LADDER, "ladder3")
@@ -51,11 +50,25 @@ func _ready() -> void:
 		block.parent_piece = current_piece
 
 func _process(delta : float) -> void:
-	BlockFallTimer += delta
-	if (BlockFallTimer >= FallTime):
-		BlockFallTimer = 0
+	block_fall_timer += delta
+	if (block_fall_timer >= fall_time):
+		block_fall_timer = 0
 		current_update += 1
 		update_blocks()
+
+func _input(event : InputEvent) -> void:
+	if (event.is_action_pressed("SlamBlock")):
+		print("SlamBlock")
+		if (current_piece):
+			current_piece.dissolve_piece()
+			current_piece = null
+			block_fall_timer = fall_time
+	elif (event.is_action_pressed("SoftSlamBlock")):
+		print("SoftSlamBlock")
+		fall_time = 0.1
+	elif (event.is_action_released("SoftSlamBlock")):
+		print("SoftSlamBlock released")
+		fall_time = 1.0
 
 # 1. Move the current piece downward. If not possible, relinquish control
 #    over its blocks and delete it.
@@ -131,8 +144,7 @@ func handle_piece_fall() -> void:
 			reposition_block(block, block.level - 1, block.row, block.col)
 		print("dropping piece")
 	else: # dissolve piece grouping, blocks become part of tower
-		for block : BaseBlock in current_piece.blocks:
-			block.parent_piece = null
+		current_piece.dissolve_piece()
 		current_piece = null
 		print("settled current piece")
 
