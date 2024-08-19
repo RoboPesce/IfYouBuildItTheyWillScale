@@ -14,7 +14,7 @@ var component_roots : Array[BaseBlock]
 
 # Block fall timer
 var BlockFallTimer : float = 0
-var FallTime : float = 3.0
+var FallTime : float = 2.0
 var current_update : int = 0
 
 func _ready() -> void:
@@ -88,17 +88,19 @@ func update_blocks() -> void:
 	# set new positions
 	for root in component_roots:
 		for block in root.component_blocks:
+			if (block_array[block.level][block.row][block.col] == block): block_array[block.level][block.row][block.col] = null
 			block.level -= root.drop_distance
-	
+			block_array[block.level][block.row][block.col] = block
+
 	# TESTING
 	print("Update: ", current_update)
 	for root in component_roots:
-		print("Root: ", root.name)
-		print("Drop distance: ", root.drop_distance)
+		print(" Root: ", root.name)
+		print(" Drop distance: ", root.drop_distance)
 		var blocks : String = ""
 		for block in root.component_blocks:
 			blocks += ' ' + block.name
-		print("Blocks:", blocks)
+		print(" Blocks:", blocks, '\n')
 	print()
 
 func handle_piece_fall() -> void:
