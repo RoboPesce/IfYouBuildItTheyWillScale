@@ -1,7 +1,6 @@
-- Pieces
-- Connected components
 - Clear Layers
+- Create new pieces
 - Pathfinding
 - Collisions with cannonballs
-- soft slams and slams
 - travel is the timer
+- landing block faces glow

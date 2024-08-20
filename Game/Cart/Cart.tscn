@@ -13,6 +13,8 @@ script = ExtResource("1_oat7h")
 [node name="BlockManager" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.65, -2)
 script = ExtResource("3_d8qc8")
+base_update_time = 1.0
+soft_slam_update_time = 0.15
 
 [node name="TestBlocks" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.634, -2.01069)

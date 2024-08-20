@@ -7,7 +7,7 @@ var target_camera_position : int = 0
 @export var max_camera_vertical_speed : float = 5
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(delta : float) -> void:
+func _process(delta : float) -> void:
 	if (Global.b_drag_mouse): rotational_velocity = -Global.delta_mouse.x * camera_rotational_speed_multiplier
 	else: rotational_velocity = Global.FrameIndependentDamping(rotational_velocity, 0.0, 0.07, delta)
 	rotate_y(rotational_velocity * delta)

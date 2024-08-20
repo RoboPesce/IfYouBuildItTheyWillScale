@@ -32,7 +32,7 @@ func _physics_process(delta : float) -> void:
 		var dist : float = component_root.drop_distance if component_root else 1
 		velocity.y -= dist * gravity * delta
 		move_and_collide(velocity)
-	else:
+	elif (!position.is_equal_approx(Vector3(row, level, col))):
 		velocity = Vector3.ZERO
 		move_and_collide(Vector3(row, level, col) - position)
 
