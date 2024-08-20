@@ -19,13 +19,16 @@ func _input(event: InputEvent) -> void:
 		last_mouse_pos = get_viewport().get_mouse_position()
 	elif (event.is_action_released("MouseDrag")): b_drag_mouse = false
 
+# @param factor: proportion of the distance between source and target to travel
 func lerp(source, target, factor : float):
-	return source * factor + target * (1 - factor)
+	return source * (1 - factor) + target * factor
 
 # can be used for doubles or vectors
+# @param damping_factor: rate at which source approaches target per second
+#						 i.e. remaining proportion of source after 1 second
 func FrameIndependentDamping(source, target, damping_factor : float, delta : float):
 	var factor : float = pow(damping_factor, delta)
-	return lerp(source, target, factor)
+	return lerp(source, target, 1 - factor)
 
 # float implementation
 func FrameIndependentClampedDamping(a : float, b : float, damping_factor : float, delta : float, max_step : float):
