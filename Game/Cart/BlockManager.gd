@@ -83,15 +83,6 @@ func _process(delta : float) -> void:
 			#print(" Blocks:", blocks, '\n')
 		#print()
 
-func slam_piece() -> void:
-	if (current_piece):
-		current_piece.dissolve_piece()
-		current_piece = null
-		block_update_timer = update_time
-
-func soft_slam_piece(b_active : bool) -> void:
-	update_time = soft_slam_update_time if b_active else base_update_time
-
 # UPDATE FUNCTIONS
 
 # 1. Move the current piece downward. If not possible, relinquish control
@@ -204,30 +195,16 @@ func get_first_block_below(block : BaseBlock) -> BaseBlock:
 				else null)
 	return null
 
-# BLOCK MANAGEMENT
+# PIECE MOVEMENT/INPUT
 
-func construct_block(level : int, row : int, col : int, type : BaseBlock.BlockType, _name : String = "") -> BaseBlock:
-	# if block_array[level][row][col]: return null
-	var block = BlockContructors[type].instantiate()
-	block.level = level
-	block.row = row
-	block.col = col
-	block_array[level][row][col] = block
-	block.name = _name
-	# level is the y-coordinate
-	block.transform.origin = Vector3(row, level, col)
-	add_child(block)
-	return block
+func slam_piece() -> void:
+	if (current_piece):
+		current_piece.dissolve_piece()
+		current_piece = null
+		block_update_timer = update_time
 
-func reposition_block(block : BaseBlock, level : int, row : int, col : int):
-	# if block_array[level][row][col]: return null
-	if (block_array[block.level][block.row][block.col] == block): block_array[block.level][block.row][block.col] = null
-	block.level = level
-	block.row = row
-	block.col = col
-	block_array[block.level][block.row][block.col] = block
-
-# PIECE MANAGEMENT
+func soft_slam_piece(b_active : bool) -> void:
+	update_time = soft_slam_update_time if b_active else base_update_time
 
 # repositions and teleports all blocks in the current piece if possible
 # returns false if translation fails
@@ -276,3 +253,26 @@ func valid_index(level : int, row : int, col : int) -> bool:
 	return (level >= 0 and level < Global.MAX_BLOCK_HEIGHT
 			and row >= 0 and row < Global.BLOCKS_PER_SIDE
 			and col >= 0 and col < Global.BLOCKS_PER_SIDE)
+
+# BLOCK MANAGEMENT
+
+func construct_block(level : int, row : int, col : int, type : BaseBlock.BlockType, _name : String = "") -> BaseBlock:
+	# if block_array[level][row][col]: return null
+	var block : BaseBlock = BlockContructors[type].instantiate()
+	block.level = level
+	block.row = row
+	block.col = col
+	block_array[level][row][col] = block
+	block.name = _name
+	# level is the y-coordinate
+	block.transform.origin = Vector3(row, level, col)
+	add_child(block)
+	return block
+
+func reposition_block(block : BaseBlock, level : int, row : int, col : int):
+	# if block_array[level][row][col]: return null
+	if (block_array[block.level][block.row][block.col] == block): block_array[block.level][block.row][block.col] = null
+	block.level = level
+	block.row = row
+	block.col = col
+	block_array[block.level][block.row][block.col] = block
