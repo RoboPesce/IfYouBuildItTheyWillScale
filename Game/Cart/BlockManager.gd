@@ -31,6 +31,17 @@ func _ready() -> void:
 			block_array[level][row].resize(Global.BLOCKS_PER_SIDE)
 			block_array[level][row].fill(null)
 	
+	# bind input callbacks
+	InputManager.SlamBlock.connect(slam_block)
+	InputManager.SoftSlamBlock.connect(soft_slam_block.bind(true))
+	InputManager.ReleaseSoftSlamBlock.connect(soft_slam_block.bind(false))
+	InputManager.MoveForward.connect(translate_piece.bind(0, -1, 0))
+	InputManager.MoveBackward.connect(translate_piece.bind(0, 1, 0))
+	InputManager.MoveLeft.connect(translate_piece.bind(0, 0, 1))
+	InputManager.MoveRight.connect(translate_piece.bind(0, 0, -1))
+	InputManager.RotateClockwise.connect(rotate_piece.bind(true))
+	InputManager.RotateCounterclockwise.connect(rotate_piece.bind(false))
+	
 	# TESTING
 	construct_block(0, 0, 0, BaseBlock.BlockType.STONE, "stone0")
 	construct_block(1, 0, 0, BaseBlock.BlockType.WOOD, "wood1")
@@ -72,37 +83,14 @@ func _process(delta : float) -> void:
 			#print(" Blocks:", blocks, '\n')
 		#print()
 
-func _input(event : InputEvent) -> void:
-	if (event.is_action_pressed("SlamBlock")):
-		print("SlamBlock")
-		if (current_piece):
-			current_piece.dissolve_piece()
-			current_piece = null
-			block_update_timer = update_time
-	elif (event.is_action_pressed("SoftSlamBlock")):
-		print("SoftSlamBlock")
-		update_time = soft_slam_update_time
-	elif (event.is_action_released("SoftSlamBlock")):
-		print("SoftSlamBlock released")
-		update_time = base_update_time
-	elif (event.is_action_pressed("MoveForward")):
-		if (translate_piece(0, -1, 0)): print("Successfully moved forward")
-		else: print("Failed to move forward")
-	elif (event.is_action_pressed("MoveBackward")):
-		if (translate_piece(0, 1, 0)): print("Successfully moved backward")
-		else: print("Failed to move backward")
-	elif (event.is_action_pressed("MoveLeft")):
-		if (translate_piece(0, 0, 1)): print("Successfully moved left")
-		else: print("Failed to move left")
-	elif (event.is_action_pressed("MoveRight")):
-		if (translate_piece(0, 0, -1)): print("Successfully moved right")
-		else: print("Failed to move right")
-	elif (event.is_action_pressed("rotate_clockwise")):
-		if (rotate_piece(true)): print("Successfully rotated clockwise")
-		else: print("Failed to rotate clockwise")
-	elif (event.is_action_pressed("rotate_counterclockwise")):
-		if (rotate_piece(true)): print("Successfully rotated counterclockwise")
-		else: print("Failed to rotate counterclockwise")
+func slam_block() -> void:
+	if (current_piece):
+		current_piece.dissolve_piece()
+		current_piece = null
+		block_update_timer = update_time
+
+func soft_slam_block(b_active : bool) -> void:
+	update_time = soft_slam_update_time if b_active else base_update_time
 
 # 1. Move the current piece downward. If not possible, relinquish control
 #    over its blocks and delete it.
