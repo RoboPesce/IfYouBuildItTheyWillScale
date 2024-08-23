@@ -97,6 +97,12 @@ func _input(event : InputEvent) -> void:
 	elif (event.is_action_pressed("MoveRight")):
 		if (translate_piece(0, 0, -1)): print("Successfully moved right")
 		else: print("Failed to move right")
+	elif (event.is_action_pressed("rotate_clockwise")):
+		if (rotate_piece(true)): print("Successfully rotated clockwise")
+		else: print("Failed to rotate clockwise")
+	elif (event.is_action_pressed("rotate_counterclockwise")):
+		if (rotate_piece(true)): print("Successfully rotated counterclockwise")
+		else: print("Failed to rotate counterclockwise")
 
 # 1. Move the current piece downward. If not possible, relinquish control
 #    over its blocks and delete it.
@@ -238,12 +244,41 @@ func translate_piece(d_level : int, d_row : int, d_col : int) -> bool:
 		var n_level : int = block.level + d_level
 		var n_row : int = block.row + d_row
 		var n_col : int = block.col + d_col
-		if (n_level < 0 or n_level >= Global.MAX_BLOCK_HEIGHT
-		  or n_row < 0 or n_row >= Global.BLOCKS_PER_SIDE
-		  or n_col < 0 or n_col >= Global.BLOCKS_PER_SIDE
+		if (not valid_index(n_level, n_row, n_col)
 		  or (block_array[n_level][n_row][n_col] and block_array[n_level][n_row][n_col].parent_piece != block.parent_piece)):
 			return false
+
 	for block in current_piece.blocks:
 		reposition_block(block, block.level + d_level, block.row + d_row, block.col + d_col)
 		block.position += Vector3(d_row, d_level, d_col)
 	return true
+
+# repositions and teleports all blocks in the current piece if possible
+# returns false if rotation fails
+# @param b_left: if true, rotates clockwise; else rotates counterclockwise
+func rotate_piece(b_clockwise : bool) -> bool:
+	if (!current_piece): return false
+	# verify the rotation is valid
+	for block in current_piece.blocks:
+		var d_row : int = block.row - current_piece.pivot.row
+		var d_col : int = block.col - current_piece.pivot.col
+		var n_row : int = current_piece.pivot.row + (-d_col if b_clockwise else d_col)
+		var n_col : int = current_piece.pivot.col + (d_row if b_clockwise else -d_row)
+		if (!valid_index(block.level, n_row, n_col)
+		  or (block_array[block.level][n_row][n_col] and block_array[block.level][n_row][n_col].parent_piece != block.parent_piece)):
+			return false
+
+	for block in current_piece.blocks:
+		var d_row : int = block.row - current_piece.pivot.row
+		var d_col : int = block.col - current_piece.pivot.col
+		var n_row : int = current_piece.pivot.row + (-d_col if b_clockwise else d_col)
+		var n_col : int = current_piece.pivot.col + (d_row if b_clockwise else -d_row)
+		reposition_block(block, block.level, n_row, n_col)
+		block.position = Vector3(n_row, block.level, n_col)
+		pass 
+	return true
+
+func valid_index(level : int, row : int, col : int) -> bool:
+	return (level >= 0 and level < Global.MAX_BLOCK_HEIGHT
+			and row >= 0 and row < Global.BLOCKS_PER_SIDE
+			and col >= 0 and col < Global.BLOCKS_PER_SIDE)
