@@ -32,9 +32,9 @@ func _ready() -> void:
 			block_array[level][row].fill(null)
 	
 	# bind input callbacks
-	InputManager.SlamBlock.connect(slam_block)
-	InputManager.SoftSlamBlock.connect(soft_slam_block.bind(true))
-	InputManager.ReleaseSoftSlamBlock.connect(soft_slam_block.bind(false))
+	InputManager.SlamPiece.connect(slam_piece)
+	InputManager.SoftSlamPiece.connect(soft_slam_piece.bind(true))
+	InputManager.ReleaseSoftSlamPiece.connect(soft_slam_piece.bind(false))
 	InputManager.MoveForward.connect(translate_piece.bind(0, -1, 0))
 	InputManager.MoveBackward.connect(translate_piece.bind(0, 1, 0))
 	InputManager.MoveLeft.connect(translate_piece.bind(0, 0, 1))
@@ -83,14 +83,16 @@ func _process(delta : float) -> void:
 			#print(" Blocks:", blocks, '\n')
 		#print()
 
-func slam_block() -> void:
+func slam_piece() -> void:
 	if (current_piece):
 		current_piece.dissolve_piece()
 		current_piece = null
 		block_update_timer = update_time
 
-func soft_slam_block(b_active : bool) -> void:
+func soft_slam_piece(b_active : bool) -> void:
 	update_time = soft_slam_update_time if b_active else base_update_time
+
+# UPDATE FUNCTIONS
 
 # 1. Move the current piece downward. If not possible, relinquish control
 #    over its blocks and delete it.
@@ -202,6 +204,8 @@ func get_first_block_below(block : BaseBlock) -> BaseBlock:
 				else null)
 	return null
 
+# BLOCK MANAGEMENT
+
 func construct_block(level : int, row : int, col : int, type : BaseBlock.BlockType, _name : String = "") -> BaseBlock:
 	# if block_array[level][row][col]: return null
 	var block = BlockContructors[type].instantiate()
@@ -222,6 +226,8 @@ func reposition_block(block : BaseBlock, level : int, row : int, col : int):
 	block.row = row
 	block.col = col
 	block_array[block.level][block.row][block.col] = block
+
+# PIECE MANAGEMENT
 
 # repositions and teleports all blocks in the current piece if possible
 # returns false if translation fails
