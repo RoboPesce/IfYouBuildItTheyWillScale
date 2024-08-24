@@ -5,6 +5,9 @@ const BlockContructors = [preload("res://Game/Blocks/Scenes/WoodBlock.tscn"),
 						 preload("res://Game/Blocks/Scenes/StoneBlock.tscn"),
 						 preload("res://Game/Blocks/Scenes/LadderBlock.tscn")]
 
+# level of new piece's pivot
+signal SpawnedNewPiece(level : int)
+
 # 3D array of all blocks in scene
 # block_array[level][row][column]
 var block_array : Array = Array()
@@ -43,23 +46,23 @@ func _ready() -> void:
 	InputManager.RotateCounterclockwise.connect(rotate_piece.bind(false))
 	
 	# TESTING
-	construct_block(0, 0, 0, BaseBlock.BlockType.STONE, "stone0")
-	construct_block(1, 0, 0, BaseBlock.BlockType.WOOD, "wood1")
-	construct_block(4, 0, 0, BaseBlock.BlockType.STONE, "stone4")
-	construct_block(5, 0, 0, BaseBlock.BlockType.STONE, "stone5")
-	construct_block(5, 1, 0, BaseBlock.BlockType.WOOD, "wood2")
-	construct_block(0, 1, 0, BaseBlock.BlockType.LADDER, "ladder0")
-	construct_block(1, 1, 0, BaseBlock.BlockType.LADDER, "ladder1")
-	construct_block(1, 2, 0, BaseBlock.BlockType.LADDER, "ladder3")
-	construct_block(0, 4, 3, BaseBlock.BlockType.STONE, "stone2")
-	construct_block(0, 4, 4, BaseBlock.BlockType.STONE, "stone3")
-	construct_block(1, 4, 4, BaseBlock.BlockType.LADDER, "ladder4")
+	spawn_block(0, 0, 0, BaseBlock.BlockType.STONE, "stone0")
+	spawn_block(1, 0, 0, BaseBlock.BlockType.WOOD, "wood1")
+	spawn_block(4, 0, 0, BaseBlock.BlockType.STONE, "stone4")
+	spawn_block(5, 0, 0, BaseBlock.BlockType.STONE, "stone5")
+	spawn_block(5, 1, 0, BaseBlock.BlockType.WOOD, "wood2")
+	spawn_block(0, 1, 0, BaseBlock.BlockType.LADDER, "ladder0")
+	spawn_block(1, 1, 0, BaseBlock.BlockType.LADDER, "ladder1")
+	spawn_block(1, 2, 0, BaseBlock.BlockType.LADDER, "ladder3")
+	spawn_block(0, 4, 3, BaseBlock.BlockType.STONE, "stone2")
+	spawn_block(0, 4, 4, BaseBlock.BlockType.STONE, "stone3")
+	spawn_block(1, 4, 4, BaseBlock.BlockType.LADDER, "ladder4")
 	current_piece = Piece.new()
-	current_piece.blocks.append(construct_block(5, 2, 2, BaseBlock.BlockType.LADDER, "ladder01"))
-	current_piece.blocks.append(construct_block(6, 2, 2, BaseBlock.BlockType.LADDER, "ladder02"))
-	current_piece.blocks.append(construct_block(7, 2, 2, BaseBlock.BlockType.LADDER, "ladder03"))
-	current_piece.blocks.append(construct_block(6, 3, 2, BaseBlock.BlockType.WOOD, "wood01"))
-	current_piece.blocks.append(construct_block(6, 1, 2, BaseBlock.BlockType.WOOD, "wood02"))
+	current_piece.blocks.append(spawn_block(5, 2, 2, BaseBlock.BlockType.LADDER, "ladder01"))
+	current_piece.blocks.append(spawn_block(6, 2, 2, BaseBlock.BlockType.LADDER, "ladder02"))
+	current_piece.blocks.append(spawn_block(7, 2, 2, BaseBlock.BlockType.LADDER, "ladder03"))
+	current_piece.blocks.append(spawn_block(6, 3, 2, BaseBlock.BlockType.WOOD, "wood01"))
+	current_piece.blocks.append(spawn_block(6, 1, 2, BaseBlock.BlockType.WOOD, "wood02"))
 	for block in current_piece.blocks:
 		block.parent_piece = current_piece
 	current_piece.pivot = current_piece.blocks[1]
@@ -98,7 +101,7 @@ func update_blocks() -> void:
 	if (current_piece):
 		handle_piece_fall()
 	else: # create new piece
-		pass
+		spawn_piece()
 
 	component_roots.clear()
 	# iterate through blocks/levels bottom up
@@ -198,9 +201,14 @@ func get_first_block_below(block : BaseBlock) -> BaseBlock:
 
 # PIECE MOVEMENT/INPUT
 
-func construct_piece() -> Piece:
+func spawn_piece():
 	var piece_definition = PieceDefinition.get_new_piece_definition()
-	return Piece.new()
+	
+	current_piece = Piece.new()
+	current_piece.pivot = BaseBlock.new()
+	current_piece.pivot.level = Global.MAX_BLOCK_HEIGHT
+	
+	SpawnedNewPiece.emit(current_piece.pivot.level)
 
 func slam_piece() -> void:
 	if (current_piece):
@@ -261,7 +269,7 @@ func valid_index(level : int, row : int, col : int) -> bool:
 
 # BLOCK MANAGEMENT
 
-func construct_block(level : int, row : int, col : int, type : BaseBlock.BlockType, _name : String = "") -> BaseBlock:
+func spawn_block(level : int, row : int, col : int, type : BaseBlock.BlockType, _name : String = "") -> BaseBlock:
 	# if block_array[level][row][col]: return null
 	var block : BaseBlock = BlockContructors[type].instantiate()
 	block.level = level
