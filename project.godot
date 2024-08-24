@@ -19,6 +19,7 @@ config/icon="res://Res/Wood1.png"
 
 Global="*res://Game/World/Global.gd"
 InputManager="*res://Game/World/InputManager.gd"
+PieceDefinition="*res://Game/Pieces/PieceDefinition.gd"
 
 [editor_plugins]
 

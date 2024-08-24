@@ -85,6 +85,7 @@ func _process(delta : float) -> void:
 
 # UPDATE FUNCTIONS
 
+# Algorithm:
 # 1. Move the current piece downward. If not possible, relinquish control
 #    over its blocks and delete it.
 #    TODO: If there is no current piece, create a new one.
@@ -196,6 +197,10 @@ func get_first_block_below(block : BaseBlock) -> BaseBlock:
 	return null
 
 # PIECE MOVEMENT/INPUT
+
+func construct_piece() -> Piece:
+	var piece_definition = PieceDefinition.get_new_piece_definition()
+	return Piece.new()
 
 func slam_piece() -> void:
 	if (current_piece):
