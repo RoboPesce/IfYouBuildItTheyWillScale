@@ -58,11 +58,11 @@ func _ready() -> void:
 	spawn_block(0, 4, 4, BaseBlock.BlockType.STONE, "stone3")
 	spawn_block(1, 4, 4, BaseBlock.BlockType.LADDER, "ladder4")
 	current_piece = Piece.new()
-	current_piece.blocks.append(spawn_block(5, 2, 2, BaseBlock.BlockType.LADDER, "ladder01"))
-	current_piece.blocks.append(spawn_block(6, 2, 2, BaseBlock.BlockType.LADDER, "ladder02"))
-	current_piece.blocks.append(spawn_block(7, 2, 2, BaseBlock.BlockType.LADDER, "ladder03"))
-	current_piece.blocks.append(spawn_block(6, 3, 2, BaseBlock.BlockType.WOOD, "wood01"))
-	current_piece.blocks.append(spawn_block(6, 1, 2, BaseBlock.BlockType.WOOD, "wood02"))
+	current_piece.blocks.append(spawn_block(10, 2, 2, BaseBlock.BlockType.LADDER, "ladder01"))
+	current_piece.blocks.append(spawn_block(11, 2, 2, BaseBlock.BlockType.LADDER, "ladder02"))
+	current_piece.blocks.append(spawn_block(12, 2, 2, BaseBlock.BlockType.LADDER, "ladder03"))
+	current_piece.blocks.append(spawn_block(11, 3, 2, BaseBlock.BlockType.WOOD, "wood01"))
+	current_piece.blocks.append(spawn_block(11, 1, 2, BaseBlock.BlockType.WOOD, "wood02"))
 	for block in current_piece.blocks:
 		block.parent_piece = current_piece
 	current_piece.pivot = current_piece.blocks[1]
@@ -208,7 +208,8 @@ func spawn_piece():
 	current_piece.pivot = BaseBlock.new()
 	current_piece.pivot.level = Global.MAX_BLOCK_HEIGHT
 	
-	SpawnedNewPiece.emit(current_piece.pivot.level)
+	# disabled temporarily for testing
+	#SpawnedNewPiece.emit(current_piece.pivot.level)
 
 func slam_piece() -> void:
 	if (current_piece):

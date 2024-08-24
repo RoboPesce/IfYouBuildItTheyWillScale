@@ -3,7 +3,7 @@ extends Node3D
 var rotational_velocity : float = 0
 @export var camera_rotational_speed_multiplier : float
 
-var target_camera_position : int = 0
+var target_camera_position : int = 7
 @export var max_camera_vertical_speed : float = 5
 
 func _ready() -> void:
