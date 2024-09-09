@@ -138,6 +138,7 @@ func update_blocks() -> void:
 
 # Clears any lines and returns true if lines were cleared.
 func check_for_clears() -> bool:
+	var lines_cleared : bool = false
 	var colfills : Array[int] = []
 	colfills.resize(Global.BLOCKS_PER_SIDE)
 	for level : int in range(Global.MAX_BLOCK_HEIGHT):
@@ -149,11 +150,13 @@ func check_for_clears() -> bool:
 					rowfill += 1
 					colfills[col] += 1
 			if rowfill == Global.BLOCKS_PER_SIDE:
+				lines_cleared = true
 				print("Row ", str(row), " on level ", str(level), " is filled")
 		for col : int in range(Global.BLOCKS_PER_SIDE):
 			if colfills[col] == Global.BLOCKS_PER_SIDE:
+				lines_cleared = true
 				print("Col ", str(col), " on level ", str(level), " is filled")
-	return false
+	return lines_cleared
 
 func handle_piece_fall() -> void:
 	var b_can_drop : bool = true
