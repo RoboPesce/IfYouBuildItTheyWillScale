@@ -29,7 +29,7 @@ func _ready() -> void:
 	for level : int in range(Global.MAX_BLOCK_HEIGHT):
 		block_array[level] = Array()
 		block_array[level].resize(Global.BLOCKS_PER_SIDE)
-		for row in range(Global.BLOCKS_PER_SIDE):
+		for row : int in range(Global.BLOCKS_PER_SIDE):
 			block_array[level][row] = Array()
 			block_array[level][row].resize(Global.BLOCKS_PER_SIDE)
 			block_array[level][row].fill(null)
@@ -66,6 +66,7 @@ func _ready() -> void:
 	for block in current_piece.blocks:
 		block.parent_piece = current_piece
 	current_piece.pivot = current_piece.blocks[1]
+	# END TESTING
 
 func _process(delta : float) -> void:
 	block_update_timer += delta
@@ -74,6 +75,7 @@ func _process(delta : float) -> void:
 		current_update += 1
 		print("Invoking block update ", current_update)
 		update_blocks()
+		check_for_clears()
 		
 		# TESTING
 		#print("Update: ", current_update)
@@ -105,9 +107,9 @@ func update_blocks() -> void:
 
 	component_roots.clear()
 	# iterate through blocks/levels bottom up
-	for level in range(Global.MAX_BLOCK_HEIGHT):
-		for row in range(Global.BLOCKS_PER_SIDE):
-			for col in range(Global.BLOCKS_PER_SIDE):
+	for level : int in range(Global.MAX_BLOCK_HEIGHT):
+		for row : int in range(Global.BLOCKS_PER_SIDE):
+			for col : int in range(Global.BLOCKS_PER_SIDE):
 				var block : BaseBlock = block_array[level][row][col]
 				if (block == null
 					or block.parent_piece
@@ -133,6 +135,25 @@ func update_blocks() -> void:
 	for root in component_roots:
 		for block in root.component_blocks:
 			reposition_block(block, block.level - root.drop_distance, block.row, block.col)
+
+# Clears any lines and returns true if lines were cleared.
+func check_for_clears() -> bool:
+	var colfills : Array[int] = []
+	colfills.resize(Global.BLOCKS_PER_SIDE)
+	for level : int in range(Global.MAX_BLOCK_HEIGHT):
+		colfills.fill(0)
+		for row : int in range(Global.BLOCKS_PER_SIDE):
+			var rowfill : int = 0
+			for col : int in range(Global.BLOCKS_PER_SIDE):
+				if block_array[level][row][col] != null:
+					rowfill += 1
+					colfills[col] += 1
+			if rowfill == Global.BLOCKS_PER_SIDE:
+				print("Row ", str(row), " on level ", str(level), " is filled")
+		for col : int in range(Global.BLOCKS_PER_SIDE):
+			if colfills[col] == Global.BLOCKS_PER_SIDE:
+				print("Col ", str(col), " on level ", str(level), " is filled")
+	return false
 
 func handle_piece_fall() -> void:
 	var b_can_drop : bool = true
